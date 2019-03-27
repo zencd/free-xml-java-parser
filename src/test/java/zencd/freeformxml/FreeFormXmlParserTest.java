@@ -13,6 +13,7 @@ public class FreeFormXmlParserTest {
     private static final Logger log = LoggerFactory.getLogger(FreeFormXmlParserTest.class);
 
     public static class CarXml {
+        public String name;
         public List<Wheel> wheels;
         public static class Wheel {
             public String name;
@@ -85,6 +86,25 @@ public class FreeFormXmlParserTest {
         assertEquals(2, wheels.size());
         assertEquals("one", wheels.get(0).name);
         assertEquals("two", wheels.get(1).name);
+    }
+
+    @Test
+    public void test_root_property_via_xml_tag() throws Exception {
+        String xmlContent = "" +
+                "<root>\n" +
+                "  <name>July</name>" +
+                "</root>";
+        CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);
+        assertEquals("July", root.name);
+    }
+
+    @Test
+    public void test_root_property_via_xml_attr() throws Exception {
+        String xmlContent = "" +
+                "<root name='July'>\n" +
+                "</root>";
+        CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);
+        assertEquals("July", root.name);
     }
 
 }
