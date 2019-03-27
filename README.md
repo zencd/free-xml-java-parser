@@ -26,14 +26,14 @@ The full form:
         </wheels>
     </root>
 
-Without parent `<wheels>` it works too:
+Without the parent `<wheels>` it works too:
 
     <root>
       <wheel name='one'/>
       <wheel name='two'/>
     </root>
 
-A special tag `<item>` automatically recognized as a `wheel` inside a collection:
+A special tag `<item>` automatically recognized as a `<wheel>` being inside a collection:
 
     <root>
         <wheels>
