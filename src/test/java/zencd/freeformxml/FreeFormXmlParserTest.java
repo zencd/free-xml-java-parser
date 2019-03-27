@@ -21,25 +21,27 @@ public class FreeFormXmlParserTest {
     }
 
     public static class TypeBindingXml {
-        public Thing thing;
-        public static class Thing {
-            public String string;
-            public int integerNumber;
-            public long longNumber;
-        }
+        public String string;
+        public int intNumber;
+        public long longNumber;
+        public float floatNumber;
+        public double doubleNumber;
     }
 
     @Test
     public void test_types() throws Exception {
         String xmlContent = "" +
-                "<root>\n" +
-                "  <thing string='Jon' integerNumber='200' longNumber='500'/>\n" +
+                "<root string='Jon' intNumber='200' longNumber='500' \n" +
+                " floatNumber='1.23'" +
+                " doubleNumber='4.56'" +
+                ">" +
                 "</root>";
-        TypeBindingXml.Thing thing = FreeFormXmlParser.parse(TypeBindingXml.class, xmlContent).thing;
-        //log.debug("thing: {}", thing);
-        assertEquals("Jon", thing.string);
-        assertEquals(200, thing.integerNumber);
-        assertEquals(500, thing.longNumber);
+        TypeBindingXml obj = FreeFormXmlParser.parse(TypeBindingXml.class, xmlContent);
+        assertEquals("Jon", obj.string);
+        assertEquals(200, obj.intNumber);
+        assertEquals(500, obj.longNumber);
+        assertEquals((float)1.23, obj.floatNumber);
+        assertEquals(4.56, obj.doubleNumber);
     }
 
     @Test
