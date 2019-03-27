@@ -1,6 +1,6 @@
 # free-xml-java-parser
 
-An XML parser which parses a string into a Java object tree basing on the given class structure only, without any annotations and directives.
+A very simple XML parser which parses a string into a Java object tree basing on the given class structure only, without any annotations and directives.
 
 Sample usage:
 
