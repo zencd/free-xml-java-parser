@@ -1,6 +1,6 @@
 # free-xml-java-parser
 
-A very simple XML parser binding text into the given Java class structure.
+A very simple XML parser binding text into the given Java class structure. Written by zencd.
 
 ## Key features
 
