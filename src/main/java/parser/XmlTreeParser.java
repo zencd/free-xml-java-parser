@@ -105,12 +105,13 @@ public class XmlTreeParser extends DefaultHandler {
             //}
         } else {
             Field assignedProperty = getField(parentNode.object.getClass(), tagName);
+            //log.debug("tagName: {}, assignedProperty: {}", tagName, assignedProperty);
             if (assignedProperty != null) {
                 Class assignedPropertyType = assignedProperty.getType();
                 boolean creatingACollectionHere = isList(assignedPropertyType);
                 if (creatingACollectionHere) {
                     Class elementType = getListElementType(assignedProperty);
-                    Object list = newInstance(ArrayList.class);
+                    ArrayList list = newInstance(ArrayList.class);
                     setProperty(assignedProperty, parentNode.object, list);
                     return new NodeInfo(list, elementType);
                 } else {
@@ -120,17 +121,35 @@ public class XmlTreeParser extends DefaultHandler {
                 }
             }
 
-            if (tagName.equals("item")) {
+            {
                 // if this node is "wheel", let's find the "wheels" property at the parent node
                 // if it's a list, then add this element to it
                 String pluralName = tagName + "s";
                 Field listProperty = getField(parentNode.object.getClass(), pluralName);
-                if (isList(listProperty)) {
+                if (listProperty != null && isList(listProperty)) {
+                    Class elementType = getListElementType(listProperty);
+                    Object elementInstance = newInstance(elementType);
+                    Object listInstance = getProperty(listProperty, parentNode.object);
+                    if (listInstance == null) {
+                        listInstance = newInstance(ArrayList.class);
+                        setProperty(listProperty, parentNode.object, listInstance);
+                    }
+                    log.debug("listProperty: {}", listProperty);
+                    log.debug("listInstance: {}", listInstance);
+                    addToCollection(listInstance, elementInstance);
+                    return new NodeInfo(elementInstance);
+                }
+            }
+
+            if (tagName.equals("item")) {
+                // if this node has a special name "item", let's try to add it to the parent collection
+                String pluralName = tagName + "s";
+                Field listProperty = getField(parentNode.object.getClass(), pluralName);
+                if (listProperty != null && isList(listProperty)) {
                     Class elementType = getListElementType(listProperty);
                     Object elementInstance = newInstance(elementType);
                     Object listInstance = getProperty(listProperty, parentNode.object);
                     addToCollection(listInstance, elementInstance);
-                    int stop = 0;
                     return new NodeInfo(elementInstance);
                 }
             }
@@ -184,7 +203,7 @@ public class XmlTreeParser extends DefaultHandler {
                 String attrName = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
                 setFieldFromStringValue(object, attrName, value);
-                log.debug("attrName: {}", attrName);
+                //log.debug("attrName: {}", attrName);
             }
         }
     }
@@ -237,7 +256,7 @@ public class XmlTreeParser extends DefaultHandler {
         }
     }
 
-    private Object newInstance(Class clazz) {
+    private <T> T newInstance(Class<T> clazz) {
         try {
             return clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {

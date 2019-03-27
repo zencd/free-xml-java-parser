@@ -1,28 +1,46 @@
 # free-xml-java-parser
 
-A very simple XML parser binding text into the given Java class structure without annotations.
+A very simple XML parser binding text into the given Java class structure.
 
-Sample usage:
+Key features:
 
-    public static class SmallXml {
-        public List<Item> items;
-        public static class Item {
+- No annotations needed
+- XML may come in different (free) forms but it gonna be parsed anyway
+
+Let's there is a model:
+
+    public static class CarXml {
+        public List<Wheel> wheel;
+        public static class Wheel {
             public String name;
         }
     }
 
-    ```java
-    String xmlContent = "" +
-            "<root>\n" +
-            "    <items>\n" +
-            "        <item name='one'/>\n" +
-            "    </items>\n" +
-            "    <item name='two'/>\n" +
-            "</root>";
-    SmallXml root = XmlTreeParser.parse(SmallXml.class, xmlContent);
+Any of the following XMLs will be parsed as you might expect.
+The full form:
 
-    List<SmallXml.Item> items = root.items;
-    assertEquals(2, items.size());
-    assertEquals("one", items.get(0).name);
-    assertEquals("two", items.get(1).name);
-    ```
+    <root>
+        <wheels>
+            <wheel name='one'/>
+            <wheel name='two'/>
+        </wheels>
+    </root>
+
+Without parent `<wheels>` it works too:
+
+    <root>
+      <wheel name='one'/>
+      <wheel name='two'/>
+    </root>
+
+A special tag `<item>` automatically recognized as a `wheel` tag here:
+
+    <root>
+        <wheels>
+            <item name='one'/>
+        </wheels>
+    </root>
+
+Parser usage:
+
+    CarXml root = XmlTreeParser.parse(CarXml.class, xmlContent);
