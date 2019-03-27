@@ -4,7 +4,7 @@ A very simple XML parser binding text into the given Java class structure.
 
 Key features:
 
-- No annotations needed
+- Parsing done by a Java model, no annotations needed
 - XML may come in different (free) forms but it gonna be parsed anyway
 
 Let's there is a model:
