@@ -1,7 +1,5 @@
 package parser;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -26,12 +24,13 @@ import java.util.Stack;
 /**
  * todo start using generics
  */
-public class XmlTreeParser extends DefaultHandler {
+public class FreeFormXmlParser extends DefaultHandler {
 
-    private final static Logger log = LoggerFactory.getLogger(XmlTreeParser.class);
+    private final static Logger log = LoggerFactory.getLogger(FreeFormXmlParser.class);
 
     private final Class rootClass;
     private final String xmlContent;
+    private final PropertyBinder propertyBinder;
     private Object rootNode;
 
     private final Stack<NodeInfo> nodes = new Stack<>();
@@ -48,13 +47,18 @@ public class XmlTreeParser extends DefaultHandler {
         }
     }
 
-    public XmlTreeParser(Class rootClass, String xmlContent) {
+    public FreeFormXmlParser(Class rootClass, String xmlContent, PropertyBinder propertyBinder) {
         this.rootClass = rootClass;
         this.xmlContent = xmlContent;
+        this.propertyBinder = propertyBinder;
     }
 
     public static <T> T parse(Class<T> rootClass, String xmlContent) throws IOException, SAXException, ParserConfigurationException {
-        XmlTreeParser parser = new XmlTreeParser(rootClass, xmlContent);
+        return parse(rootClass, xmlContent, DefaultPropertyBinder.INSTANCE);
+    }
+
+    public static <T> T parse(Class<T> rootClass, String xmlContent, PropertyBinder propertyBinder) throws IOException, SAXException, ParserConfigurationException {
+        FreeFormXmlParser parser = new FreeFormXmlParser(rootClass, xmlContent, propertyBinder);
         return (T) parser.parse();
     }
 
@@ -277,36 +281,10 @@ public class XmlTreeParser extends DefaultHandler {
     private void setFieldFromStringValue(Object object, String attrName, String value) {
         try {
             Field field = object.getClass().getDeclaredField(attrName);
-            setFieldFromStringValue(object, field, value);
+            propertyBinder.setFieldFromStringValue(object, field, value);
         } catch (NoSuchFieldException e) {
             log.debug("there is no property {}.{} in the Java model - no assignment performed", object.getClass().getName(), attrName);
         }
-    }
-
-    private void setFieldFromStringValue(Object object, Field field, String stringValue) {
-        try {
-            Class<?> fieldType = field.getType();
-            field.setAccessible(true);
-            if (fieldType.equals(String.class)) {
-                field.set(object, stringValue);
-            } else if (isBoolean(fieldType)) {
-                if (StringUtils.isNotEmpty(stringValue)) {
-                    field.set(object, Boolean.parseBoolean(stringValue));
-                }
-            } else if (fieldType == int.class || fieldType == Integer.class) {
-                field.set(object, NumberUtils.toInt(stringValue, 0));
-            } else if (fieldType == long.class || fieldType == Long.class) {
-                field.set(object, NumberUtils.toLong(stringValue, 0L));
-            } else {
-                log.warn("The field type is unsupported for assignment yet: {}", field);
-            }
-        } catch (IllegalAccessException e) {
-            log.warn("Failed assigning property {} from value {}: " + e.getMessage(), field, stringValue);
-        }
-    }
-
-    private boolean isBoolean(Class<?> type) {
-        return type == boolean.class || type == Boolean.class;
     }
 
     public static InputSource makeStringInputSource(String content) {

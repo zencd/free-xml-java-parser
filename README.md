@@ -43,4 +43,4 @@ A special tag `<item>` automatically recognized as a `<wheel>` being inside a co
 
 Parser usage:
 
-    CarXml root = XmlTreeParser.parse(CarXml.class, xmlContent);
+    CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);

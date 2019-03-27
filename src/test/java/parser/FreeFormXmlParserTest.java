@@ -8,9 +8,9 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-public class XmlTreeParserTest {
+public class FreeFormXmlParserTest {
 
-    private static final Logger log = LoggerFactory.getLogger(XmlTreeParserTest.class);
+    private static final Logger log = LoggerFactory.getLogger(FreeFormXmlParserTest.class);
 
     public static class CarXml {
         public List<Wheel> wheels;
@@ -34,7 +34,7 @@ public class XmlTreeParserTest {
                 "<root>\n" +
                 "  <thing string='Jon' integerNumber='200' longNumber='500'/>\n" +
                 "</root>";
-        TypeBindingXml.Thing thing = XmlTreeParser.parse(TypeBindingXml.class, xmlContent).thing;
+        TypeBindingXml.Thing thing = FreeFormXmlParser.parse(TypeBindingXml.class, xmlContent).thing;
         //log.debug("thing: {}", thing);
         assertEquals("Jon", thing.string);
         assertEquals(200, thing.integerNumber);
@@ -50,7 +50,7 @@ public class XmlTreeParserTest {
                 "        <wheel name='two'/>\n" +
                 "    </wheels>\n" +
                 "</root>";
-        CarXml root = XmlTreeParser.parse(CarXml.class, xmlContent);
+        CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);
         List<CarXml.Wheel> wheels = root.wheels;
         assertEquals(2, wheels.size());
         assertEquals("one", wheels.get(0).name);
@@ -64,7 +64,7 @@ public class XmlTreeParserTest {
                 "  <wheel name='one'/>\n" +
                 "  <wheel name='two'/>\n" +
                 "</root>";
-        CarXml root = XmlTreeParser.parse(CarXml.class, xmlContent);
+        CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);
         List<CarXml.Wheel> wheels = root.wheels;
         assertEquals(2, wheels.size());
         assertEquals("one", wheels.get(0).name);
@@ -80,7 +80,7 @@ public class XmlTreeParserTest {
                 "        <wheel name='two'/>\n" +
                 "    </wheels>\n" +
                 "</root>";
-        CarXml root = XmlTreeParser.parse(CarXml.class, xmlContent);
+        CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);
         List<CarXml.Wheel> wheels = root.wheels;
         assertEquals(2, wheels.size());
         assertEquals("one", wheels.get(0).name);
