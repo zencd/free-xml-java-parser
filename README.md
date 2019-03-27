@@ -7,9 +7,7 @@ A very simple XML parser binding text into the given Java class structure.
 - Parsing done by a Java model, no annoytations needed
 - XML may come in different (free) forms but it gonna be parsed anyway
 
-## Free form XML
-
-Let's there is a model:
+## A sample model
 
     public static class CarXml {
         public List<Wheel> wheel;
@@ -17,6 +15,8 @@ Let's there is a model:
             public String name;
         }
     }
+
+## Free form XML
 
 Any of the following XMLs will be parsed as you might expect.
 The full form:
