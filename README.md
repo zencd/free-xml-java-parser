@@ -1,4 +1,4 @@
-# free-xml-java-parser
+# Free Form XML Java Parser
 
 A very simple XML parser binding text into the given Java class structure. Written by zencd.
 
@@ -20,7 +20,16 @@ A very simple XML parser binding text into the given Java class structure. Writt
 ## Free form XML
 
 Any of the following XMLs will be parsed as you might expect.
-The full form:
+
+Setting a Java property could be done as via an XML attribute, as via a dedicated tag:
+
+    <root name='one'/>
+
+    <root>
+        <name>one</name>
+    </root>
+
+Working with collections. The full form:
 
     <root>
         <wheels>
@@ -44,14 +53,8 @@ A special tag `<item>` automatically recognized as a `<wheel>` being inside a co
         </wheels>
     </root>
 
-Setting a Java property could be done as via an XML attribute, as via a dedicated tag:
-
-    <root name='one'/>
-
-    <root>
-        <name>one</name>
-    </root>
-
 ## Parser usage
 
     CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);
+
+Also refer to tests like `FreeFormXmlParserTest`. 
