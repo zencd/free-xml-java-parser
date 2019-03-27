@@ -281,7 +281,12 @@ public class FreeFormXmlParser extends DefaultHandler {
     private void setFieldFromStringValue(Object object, String attrName, String value) {
         try {
             Field field = object.getClass().getDeclaredField(attrName);
-            propertyBinder.setFieldFromStringValue(object, field, value);
+            try {
+                field.setAccessible(true);
+                propertyBinder.setFieldFromStringValue(object, field, value);
+            } catch (IllegalAccessException e) {
+                log.warn("Failed assigning property {} from value {}: " + e.getMessage(), field, value);
+            }
         } catch (NoSuchFieldException e) {
             log.debug("there is no property {}.{} in the Java model - no assignment performed", object.getClass().getName(), attrName);
         }
