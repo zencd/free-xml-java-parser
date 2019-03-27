@@ -11,6 +11,7 @@ Sample usage:
         }
     }
 
+    ```java
     String xmlContent = "" +
             "<root>\n" +
             "    <items>\n" +
@@ -24,3 +25,4 @@ Sample usage:
     assertEquals(2, items.size());
     assertEquals("one", items.get(0).name);
     assertEquals("two", items.get(1).name);
+    ```
