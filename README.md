@@ -33,7 +33,7 @@ Without parent `<wheels>` it works too:
       <wheel name='two'/>
     </root>
 
-A special tag `<item>` automatically recognized as a `wheel` tag here:
+A special tag `<item>` automatically recognized as a `wheel` inside a collection:
 
     <root>
         <wheels>
