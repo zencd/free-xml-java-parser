@@ -19,6 +19,8 @@ A very simple XML parser binding text into the given Java class structure. Writt
 
 ## Free form XML
 
+### Attributes
+
 Setting a Java property could be done as via an XML attribute, as via a dedicated tag:
 
     <root color='red'/>
@@ -27,7 +29,9 @@ Setting a Java property could be done as via an XML attribute, as via a dedicate
         <color>red</color>
     </root>
 
-Working with collections. The full form:
+### Collections
+
+The full form:
 
     <root>
         <wheels>
@@ -58,3 +62,7 @@ You may also mix all the approaches.
     CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);
 
 Also refer to tests like `FreeFormXmlParserTest`. 
+
+## Setting Java properties in your way
+
+See `PropertyBinder` and its derivation `DefaultPropertyBinder`.
