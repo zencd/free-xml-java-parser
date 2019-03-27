@@ -17,7 +17,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
@@ -91,7 +90,7 @@ public class FreeFormXmlParser extends DefaultHandler {
         } else if (parentNode == DEAD_NODE) {
             // skipping XML nodes without a Java model
             return DEAD_NODE;
-        } else if (parentNode.isList()) {
+        } else if (parentNode.isCollection()) {
             // instantiating an object (list element)
             // then adding it to the enclosing list
 
@@ -168,33 +167,6 @@ public class FreeFormXmlParser extends DefaultHandler {
             method.invoke(list, element);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new BindingException("Failed adding element to collection " + listClass, e);
-        }
-    }
-
-    static class NodeInfo {
-        final Object object;
-        final Class listElementType;
-        Field assignedProperty = null;
-        Object propertyOwner = null;
-
-        NodeInfo(Object nodeObject) {
-            this(nodeObject, null);
-        }
-
-        NodeInfo(Object nodeObject, Class listElementType) {
-            this.object = nodeObject;
-            this.listElementType = listElementType;
-        }
-
-        public NodeInfo(Object nodeObject, Field assignedProperty, Object propertyOwner) {
-            this.object = nodeObject;
-            this.listElementType = null;
-            this.assignedProperty = assignedProperty;
-            this.propertyOwner = propertyOwner;
-        }
-
-        public boolean isList() {
-            return object instanceof Collection;
         }
     }
 

@@ -66,3 +66,8 @@ Also refer to tests like `FreeFormXmlParserTest`.
 ## Setting Java properties in your way
 
 See `PropertyBinder` and its derivation `DefaultPropertyBinder`.
+
+# TODO
+
+- Bind properties like `some-prop` to Java, and tag names also
+- Complete `DefaultPropertyBinder`
