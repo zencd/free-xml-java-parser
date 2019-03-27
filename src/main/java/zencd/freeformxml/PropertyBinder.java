@@ -1,4 +1,4 @@
-package parser;
+package zencd.freeformxml;
 
 import java.lang.reflect.Field;
 

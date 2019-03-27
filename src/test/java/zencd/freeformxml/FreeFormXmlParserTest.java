@@ -1,4 +1,4 @@
-package parser;
+package zencd.freeformxml;
 
 import org.junit.Test;
 import org.slf4j.Logger;

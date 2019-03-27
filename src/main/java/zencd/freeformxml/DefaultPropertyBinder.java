@@ -1,4 +1,4 @@
-package parser;
+package zencd.freeformxml;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
