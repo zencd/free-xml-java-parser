@@ -2,10 +2,12 @@
 
 A very simple XML parser binding text into the given Java class structure.
 
-Key features:
+## Key features
 
 - Parsing done by a Java model, no annoytations needed
 - XML may come in different (free) forms but it gonna be parsed anyway
+
+## Free form XML
 
 Let's there is a model:
 
@@ -41,6 +43,6 @@ A special tag `<item>` automatically recognized as a `<wheel>` being inside a co
         </wheels>
     </root>
 
-Parser usage:
+## Parser usage
 
     CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);
