@@ -71,7 +71,7 @@ public class XmlTreeParser extends DefaultHandler {
         //log.debug("<{}>", qName);
         NodeInfo parentNode = nodes.isEmpty() ? null : nodes.peek();
         NodeInfo currentNode = createObjectFromTag(qName, parentNode);
-        addAttributes(currentNode.object, attrs);
+        setAttributes(currentNode.object, attrs);
 
         nodes.push(currentNode);
 
@@ -134,8 +134,6 @@ public class XmlTreeParser extends DefaultHandler {
                         listInstance = newInstance(ArrayList.class);
                         setProperty(listProperty, parentNode.object, listInstance);
                     }
-                    log.debug("listProperty: {}", listProperty);
-                    log.debug("listInstance: {}", listInstance);
                     addToCollection(listInstance, elementInstance);
                     return new NodeInfo(elementInstance);
                 }
@@ -196,14 +194,13 @@ public class XmlTreeParser extends DefaultHandler {
         }
     }
 
-    private void addAttributes(Object object, Attributes attrs) {
+    private void setAttributes(Object object, Attributes attrs) {
         if (object != null) {
             final int len = attrs.getLength();
             for (int i = 0; i < len; i++) {
                 String attrName = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
                 setFieldFromStringValue(object, attrName, value);
-                //log.debug("attrName: {}", attrName);
             }
         }
     }
@@ -296,9 +293,9 @@ public class XmlTreeParser extends DefaultHandler {
                 if (StringUtils.isNotEmpty(stringValue)) {
                     field.set(object, Boolean.parseBoolean(stringValue));
                 }
-            } else if (fieldType == int.class && fieldType == Integer.class) {
+            } else if (fieldType == int.class || fieldType == Integer.class) {
                 field.set(object, NumberUtils.toInt(stringValue, 0));
-            } else if (fieldType == long.class && fieldType == Long.class) {
+            } else if (fieldType == long.class || fieldType == Long.class) {
                 field.set(object, NumberUtils.toLong(stringValue, 0L));
             } else {
                 log.warn("The field type is unsupported for assignment yet: {}", field);
