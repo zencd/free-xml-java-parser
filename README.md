@@ -19,8 +19,6 @@ A very simple XML parser binding text into the given Java class structure. Writt
 
 ## Free form XML
 
-Any of the following XMLs will be parsed as you might expect.
-
 Setting a Java property could be done as via an XML attribute, as via a dedicated tag:
 
     <root name='one'/>
@@ -52,6 +50,8 @@ A special tag `<item>` automatically recognized as a `<wheel>` being inside a co
             <item name='one'/>
         </wheels>
     </root>
+
+You may also mix all of them.
 
 ## Parser usage
 
