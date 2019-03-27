@@ -10,7 +10,7 @@ A very simple XML parser binding text into the given Java class structure. Writt
 ## A sample model
 
     public static class CarXml {
-        public String name;
+        public String color;
         public List<Wheel> wheel;
         public static class Wheel {
             public String name;
@@ -21,10 +21,10 @@ A very simple XML parser binding text into the given Java class structure. Writt
 
 Setting a Java property could be done as via an XML attribute, as via a dedicated tag:
 
-    <root name='one'/>
+    <root color='red'/>
 
     <root>
-        <name>one</name>
+        <color>red</color>
     </root>
 
 Working with collections. The full form:
@@ -51,7 +51,7 @@ A special tag `<item>` automatically recognized as a `<wheel>` being inside a co
         </wheels>
     </root>
 
-You may also mix all of them.
+You may also mix all the approaches.
 
 ## Parser usage
 
