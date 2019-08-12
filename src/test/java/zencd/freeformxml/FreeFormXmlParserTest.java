@@ -39,9 +39,9 @@ public class FreeFormXmlParserTest {
         TypeBindingXml obj = FreeFormXmlParser.parse(TypeBindingXml.class, xmlContent);
         assertEquals("Jon", obj.string);
         assertEquals(200, obj.intNumber);
-        assertEquals(500, obj.longNumber);
-        assertEquals((float)1.23, obj.floatNumber);
-        assertEquals(4.56, obj.doubleNumber);
+        assertEquals(500L, obj.longNumber);
+        assertEquals(1.23F, obj.floatNumber);
+        assertEquals(4.56D, obj.doubleNumber);
     }
 
     @Test

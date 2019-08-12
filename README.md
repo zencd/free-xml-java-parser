@@ -21,7 +21,7 @@ A very simple XML parser binding text into the given Java class structure. Writt
 
 ### Attributes
 
-Setting a Java property could be done as via an XML attribute, as via a dedicated tag:
+Setting a Java property could be done via an XML attribute, but also via a dedicated tag:
 
     <root color='red'/>
 

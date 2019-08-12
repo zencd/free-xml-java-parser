@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 public class DefaultPropertyBinder implements PropertyBinder {
     private static final Logger log = LoggerFactory.getLogger(DefaultPropertyBinder.class);
 
-    public static DefaultPropertyBinder INSTANCE = new DefaultPropertyBinder();
+    public static final DefaultPropertyBinder INSTANCE = new DefaultPropertyBinder();
 
     private DefaultPropertyBinder() {}
 
