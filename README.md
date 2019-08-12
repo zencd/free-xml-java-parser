@@ -69,5 +69,5 @@ See `PropertyBinder` and its derivation `DefaultPropertyBinder`.
 
 # TODO
 
-- Bind properties like `some-prop` to Java, and tag names also
-- Complete `DefaultPropertyBinder`
+- ~~Bind properties like `some-prop` to Java, and tag names also~~
+- Be able to bind 'NaMe' to 'NamE' (any forms)
