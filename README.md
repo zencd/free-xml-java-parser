@@ -2,7 +2,7 @@
 
 A very simple XML parser loosely binding text into the given Java class structure.
 
-Written by zencd. Java7+.
+Written by [zencd](https://github.com/zencd). Java7+.
 
 ## Key features
 
