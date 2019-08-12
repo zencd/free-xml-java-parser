@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * todo start using generics
  */
 public class FreeFormXmlParser extends DefaultHandler {
 
@@ -83,7 +82,9 @@ public class FreeFormXmlParser extends DefaultHandler {
         }
     }
 
-    private NodeInfo createObjectFromTag(String tagName, NodeInfo parentNode) {
+    private NodeInfo createObjectFromTag(String tagNameOrig, NodeInfo parentNode) {
+        final String tagNameNorm = normalizeName(tagNameOrig);
+
         if (parentNode == null) {
             // XML root element
             return new NodeInfo(newInstance(rootClass));
@@ -107,27 +108,30 @@ public class FreeFormXmlParser extends DefaultHandler {
             //    throw new BindingException("failed instantiating inner class", e);
             //}
         } else {
-            Field assignedProperty = getField(parentNode.object.getClass(), tagName);
-            //log.debug("tagName: {}, assignedProperty: {}", tagName, assignedProperty);
-            if (assignedProperty != null) {
-                Class assignedPropertyType = assignedProperty.getType();
-                boolean creatingACollectionHere = isList(assignedPropertyType);
-                if (creatingACollectionHere) {
-                    Class elementType = getListElementType(assignedProperty);
-                    ArrayList list = newInstance(ArrayList.class);
-                    setProperty(assignedProperty, parentNode.object, list);
-                    return new NodeInfo(list, elementType);
-                } else {
-                    Object single = newInstance(assignedPropertyType);
-                    setProperty(assignedProperty, parentNode.object, single);
-                    return new NodeInfo(single, assignedProperty, parentNode.object);
+            {
+                // if this node is "wheel", try find property "wheel"
+                // it has highest priority
+                Field assignedProperty = getField(parentNode.object.getClass(), tagNameNorm);
+                if (assignedProperty != null) {
+                    Class assignedPropertyType = assignedProperty.getType();
+                    boolean creatingACollectionHere = isList(assignedPropertyType);
+                    if (creatingACollectionHere) {
+                        Class elementType = getListElementType(assignedProperty);
+                        ArrayList list = newInstance(ArrayList.class);
+                        setProperty(assignedProperty, parentNode.object, list);
+                        return new NodeInfo(list, elementType);
+                    } else {
+                        Object single = newInstance(assignedPropertyType);
+                        setProperty(assignedProperty, parentNode.object, single);
+                        return new NodeInfo(single, assignedProperty, parentNode.object);
+                    }
                 }
             }
 
             {
                 // if this node is "wheel", let's find the "wheels" property at the parent node
-                // if it's a list, then add this element to it
-                String pluralName = tagName + "s";
+                // and if it's a list, then add this element to the list
+                String pluralName = tagNameNorm + "s";
                 Field listProperty = getField(parentNode.object.getClass(), pluralName);
                 if (listProperty != null && isList(listProperty)) {
                     Class elementType = getListElementType(listProperty);
@@ -142,9 +146,9 @@ public class FreeFormXmlParser extends DefaultHandler {
                 }
             }
 
-            if (tagName.equals("item")) {
+            if (tagNameNorm.equals("item")) {
                 // if this node has a special name "item", let's try to add it to the parent collection
-                String pluralName = tagName + "s";
+                String pluralName = tagNameNorm + "s";
                 Field listProperty = getField(parentNode.object.getClass(), pluralName);
                 if (listProperty != null && isList(listProperty)) {
                     Class elementType = getListElementType(listProperty);
@@ -155,7 +159,7 @@ public class FreeFormXmlParser extends DefaultHandler {
                 }
             }
 
-            log.debug("there is no property `{}` at {} - the deeper XML gonna be skipped", tagName, parentNode.object.getClass().getName());
+            log.debug("there is no property `{}` at {} - the deeper XML gonna be skipped", tagNameNorm, parentNode.object.getClass().getName());
             return DEAD_NODE;
         }
     }
@@ -174,7 +178,9 @@ public class FreeFormXmlParser extends DefaultHandler {
         if (object != null) {
             final int len = attrs.getLength();
             for (int i = 0; i < len; i++) {
-                String attrName = attrs.getLocalName(i);
+                String localName = attrs.getLocalName(i);
+                String attrName = normalizeName(localName);
+                log.debug("localName: {}, attrName: {}", localName, attrName);
                 String value = attrs.getValue(i);
                 setFieldFromStringValue(object, attrName, value);
             }
@@ -266,6 +272,32 @@ public class FreeFormXmlParser extends DefaultHandler {
 
     public static InputSource makeStringInputSource(String content) {
         return new InputSource(new StringReader(content));
+    }
+
+    /**
+     * Converts "one-two" to "oneTwo".
+     * Converts "one_two" to "oneTwo".
+     * To be used to normalize tag and attribute names.
+     * @param original
+     * @return
+     */
+    public static String normalizeName(String original) {
+        StringBuilder buf = new StringBuilder();
+        boolean doCapitalize = false;
+        for (int i = 0; i < original.length(); i++) {
+            char ch = original.charAt(i);
+            if (ch == '-' || ch == '_') {
+                doCapitalize = true;
+            } else {
+                if (doCapitalize) {
+                    buf.append((""+ch).toUpperCase());
+                } else {
+                    buf.append(ch);
+                }
+                doCapitalize = false;
+            }
+        }
+        return buf.toString();
     }
 
 }

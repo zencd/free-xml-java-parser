@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 public class FreeFormXmlParserTest {
 
@@ -26,6 +27,15 @@ public class FreeFormXmlParserTest {
         public long longNumber;
         public float floatNumber;
         public double doubleNumber;
+    }
+
+    public static class NameNormalization {
+        public String javaName;
+        public String dashedName;
+        public SubStruct subStruct;
+        public static class SubStruct {
+            public String dashedName2;
+        }
     }
 
     @Test
@@ -107,6 +117,19 @@ public class FreeFormXmlParserTest {
                 "</root>";
         CarXml root = FreeFormXmlParser.parse(CarXml.class, xmlContent);
         assertEquals("July", root.name);
+    }
+
+    @Test
+    public void test_dashed_names() throws Exception {
+        String xmlContent = "" +
+                "<root javaName='javaName' dashed-name='dashed-name'>\n" +
+                "<sub-struct dashed-name-2='dashed-name-2'/>\n" +
+                "</root>";
+        NameNormalization root = FreeFormXmlParser.parse(NameNormalization.class, xmlContent);
+        assertEquals("javaName", root.javaName);
+        assertEquals("dashed-name", root.dashedName);
+        assertNotNull(root.subStruct);
+        assertEquals("dashed-name-2", root.subStruct.dashedName2);
     }
 
 }
