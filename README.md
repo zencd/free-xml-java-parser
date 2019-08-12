@@ -1,6 +1,8 @@
 # Free Form XML Java Parser
 
-A very simple XML parser binding text into the given Java class structure. Written by zencd.
+A very simple XML parser loosely binding text into the given Java class structure.
+
+Written by zencd. Java7+.
 
 ## Key features
 
